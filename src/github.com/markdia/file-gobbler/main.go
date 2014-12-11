@@ -4,11 +4,11 @@ import (
 	//"bufio"
 	"fmt"
 	//"io"
-	"bytes"
+	//"bytes"
 	"encoding/binary"
-	"io/ioutil"
+	//"io/ioutil"
 	"log"
-	//"os"
+	"os"
 	"time"
 )
 
@@ -23,21 +23,28 @@ func main() {
 	p := fmt.Println
 	now := time.Now()
 	p(now)
-	//testing a simple readfile and dump
-	dat, err := ioutil.ReadFile("./tmp/WhoopStrapProcessed_1Day.bin")
-	check(err)
-	binBuffer := bytes.NewBuffer(dat)
-	version, err := binary.ReadUvarint(binBuffer)
-	check(err)
-	fmt.Printf("new int is %d\n", version)
-	//fmt.Print(string(dat))
 
-	//file, err := os.OpenFile("./tmp/WhoopStrapProcessed_10Minute.bin")
-	//check(err)
-	//defer file.Close()
-	//dataChunk1 := make([]byte, 39)
-	//countOfReadBytes, err := binary.Read(dataChunk1)
-	//check(err)
+	//testing a simple readfile and dump
+	/*
+		Read in Entire File
+
+		dat, err := ioutil.ReadFile("./tmp/WhoopStrapProcessed_10Minute.bin")
+		check(err)
+		sizeOfBin := binary.Size(dat)
+		p("size of bin")
+		p(sizeOfBin)
+		p("\n")
+	*/
+
+	file, err := os.Open("./tmp/WhoopStrapProcessed_10Minute.bin")
+	check(err)
+	defer file.Close()
+	sizeOfBin := binary.Size(file)
+	p("size of bin")
+	p(sizeOfBin)
+	p("\n")
+
+	check(err)
 
 	/*
 		binBuffer := bytes.NewBuffer(dat)
@@ -61,6 +68,13 @@ func main() {
 		check(err)
 		fmt.Printf("new temperature is %d\n", temperature)
 	*/
+
+	var structuredFileData WhoopStrapDataRows
+	readErr := binary.Read(file, binary.LittleEndian, &structuredFileData)
+	if readErr != nil {
+		fmt.Println("binary.Read failed:", readErr)
+	}
+	fmt.Print(structuredFileData)
 
 	filetest := time.Now()
 	p(filetest)
