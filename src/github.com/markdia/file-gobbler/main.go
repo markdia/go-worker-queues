@@ -21,8 +21,6 @@ func check(e error) {
 
 func main() {
 	p := fmt.Println
-	now := time.Now()
-	p(now)
 
 	//testing a simple readfile and dump
 	/*
@@ -36,47 +34,34 @@ func main() {
 		p("\n")
 	*/
 
-	file, err := os.Open("./tmp/WhoopStrapProcessed_10Minute.bin")
+	file, err := os.Open("./tmp/WhoopStrapProcessed_1Day.bin")
 	check(err)
 	defer file.Close()
 	sizeOfBin := binary.Size(file)
 	p("size of bin")
 	p(sizeOfBin)
 	p("\n")
-
 	check(err)
+	now := time.Now()
+	p(now)
 
-	/*
-		binBuffer := bytes.NewBuffer(dat)
-		version, err := binary.ReadUvarint(binBuffer)
-		check(err)
-		fmt.Printf("new int is %d\n", version)
-
-		flags, err := binary.ReadUvarint(binBuffer)
-		check(err)
-		fmt.Printf("new flag is %d\n", flags)
-
-		ts, err := binary.ReadUvarint(binBuffer)
-		check(err)
-		fmt.Printf("new ts is %d\n", ts)
-
-		gsr, err := binary.ReadUvarint(binBuffer)
-		check(err)
-		fmt.Printf("new gsr is %d\n", gsr)
-
-		temperature, err := binary.ReadUvarint(binBuffer)
-		check(err)
-		fmt.Printf("new temperature is %d\n", temperature)
-	*/
-
-	var structuredFileData WhoopStrapData
-	readErr := binary.Read(file, binary.LittleEndian, &structuredFileData)
-	if readErr != nil {
-		fmt.Println("binary.Read failed:", readErr)
+	sliceOfStructs := make([]WhoopStrapData, 172801)
+	i := 0
+	for {
+		var structuredFileData WhoopStrapData
+		readErr := binary.Read(file, binary.LittleEndian, &structuredFileData)
+		if readErr != nil {
+			fmt.Println("binary.Read failed:", readErr)
+			break
+		}
+		sliceOfStructs = append(sliceOfStructs, structuredFileData)
+		//fmt.Print(structuredFileData)
+		p("\n")
+		i++
 	}
-	fmt.Print(structuredFileData)
+	p("number of lines processed:")
+	p(len(sliceOfStructs))
 	p("\n")
-
 	filetest := time.Now()
 	p(filetest)
 	diff := filetest.Sub(now)
