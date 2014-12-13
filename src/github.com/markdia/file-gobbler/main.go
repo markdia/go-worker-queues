@@ -34,18 +34,15 @@ func main() {
 		p("\n")
 	*/
 
-	file, err := os.Open("./tmp/WhoopStrapProcessed_1Day.bin")
+	file, err := os.Open("./tmp/WhoopStrapProcessed_7day.bin")
 	check(err)
 	defer file.Close()
-	sizeOfBin := binary.Size(file)
-	p("size of bin")
-	p(sizeOfBin)
-	p("\n")
+
 	check(err)
 	now := time.Now()
 	p(now)
 
-	sliceOfStructs := make([]WhoopStrapData, 172801)
+	sliceOfStructs := make([]WhoopStrapData, 1)
 	i := 0
 	for {
 		var structuredFileData WhoopStrapData
@@ -56,14 +53,14 @@ func main() {
 		}
 		sliceOfStructs = append(sliceOfStructs, structuredFileData)
 		//fmt.Print(structuredFileData)
-		p("\n")
+		//p("\n")
 		i++
 	}
-	p("number of lines processed:")
-	p(len(sliceOfStructs))
-	p("\n")
 	filetest := time.Now()
 	p(filetest)
 	diff := filetest.Sub(now)
 	p(diff)
+	p("number of lines processed:")
+	p(len(sliceOfStructs))
+	p("\n")
 }
