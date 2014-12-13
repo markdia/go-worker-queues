@@ -69,12 +69,13 @@ func main() {
 		fmt.Printf("new temperature is %d\n", temperature)
 	*/
 
-	var structuredFileData WhoopStrapDataRows
+	var structuredFileData WhoopStrapData
 	readErr := binary.Read(file, binary.LittleEndian, &structuredFileData)
 	if readErr != nil {
 		fmt.Println("binary.Read failed:", readErr)
 	}
 	fmt.Print(structuredFileData)
+	p("\n")
 
 	filetest := time.Now()
 	p(filetest)

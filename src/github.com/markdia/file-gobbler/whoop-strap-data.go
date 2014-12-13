@@ -22,7 +22,7 @@ type WhoopStrapData struct {
 	Temperature            uint8
 	AccelerometerMagnitude float32
 	HeartRate              uint16
-	RRIntervals            float32
+	RRIntervals            [5]float32
 }
 
 type WhoopStrapDataRows []WhoopStrapData
